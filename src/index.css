@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-100 dark:bg-[#0a0a0a] text-slate-900 dark:text-white font-sans antialiased transition-colors duration-300;
+  }
+
+  button, a, select, [role="button"] {
+    cursor: pointer;
+  }
+
+  .recharts-pie-sector,
+  .recharts-active-shape,
+  .recharts-sector,
+  .recharts-layer {
+    cursor: pointer;
+  }
+}
+
+@media print {
+  aside {
+     display: none !important;
+  }
+  header {
+     display: none !important;
+  }
+  .bg-\[\#FFE600\] {
+     background-color: #FFE600 !important;
+     -webkit-print-color-adjust: exact;
+  }
+  body, main, div {
+     background-color: white !important;
+     color: black !important;
+     border-color: #eee !important;
+  }
+  div, p, span {
+     -webkit-print-color-adjust: exact;
+  }
+}
