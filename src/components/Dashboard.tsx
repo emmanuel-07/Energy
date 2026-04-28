@@ -44,74 +44,66 @@ export function Dashboard({ results, rooms }: DashboardProps) {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         
-        <div className="bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none p-5 sm:p-6 xl:p-8 flex flex-col justify-between transition-colors duration-300">
-          <div className="flex items-center justify-between pb-4 sm:pb-6 border-b border-slate-100 dark:border-neutral-800 transition-colors">
+        <div className="bg-white dark:bg-[#181818] rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-colors duration-300">
+          <div className="flex items-center justify-between pb-4 sm:pb-6">
             <div className="group relative">
-               <p className="text-[8px] sm:text-[9px] font-bold text-slate-500 dark:text-neutral-500 uppercase tracking-[0.2em] border-b border-slate-300 dark:border-neutral-600 border-dashed pb-[1px] inline-block cursor-help">
+               <p className="text-[10px] font-semibold text-slate-700 dark:text-neutral-300 uppercase tracking-[0.15em] cursor-help whitespace-nowrap">
                   Total Daily Load
                </p>
-               <div className="absolute top-full left-0 mt-2 hidden w-48 sm:w-64 p-3 bg-slate-900 text-white text-[10px] rounded-lg shadow-xl group-hover:block z-10 font-medium normal-case tracking-normal border border-white/10">
-                 Calculated by multiplying the wattage of each appliance by its quantity, duty cycle, and daily hours of use.
+               <div className="absolute top-full left-0 mt-2 hidden w-[200px] sm:w-64 p-3 bg-slate-900 text-white text-[10px] rounded-lg shadow-xl group-hover:block z-10 font-medium normal-case tracking-normal border border-white/10 break-words">
+                 Sum of all appliance energy usage based on hours used per day.
                </div>
             </div>
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-transparent shadow-sm dark:shadow-none transition-colors">
-              <Activity className="h-4 w-4 text-slate-500 dark:text-neutral-400" />
-            </div>
+            <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-slate-700 dark:text-neutral-300 flex-shrink-0 ml-2" />
           </div>
-          <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tighter mt-4 sm:mt-6 transition-colors truncate">
-            {(results.totalDailyLoadWh / 1000).toFixed(2)} <span className="text-[8px] sm:text-[10px] text-slate-500 dark:text-neutral-500 font-sans tracking-[0.1em] uppercase ml-1">kWh/day</span>
+          <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-slate-900 dark:text-white mt-2 sm:mt-4 transition-colors whitespace-nowrap">
+            {(results.totalDailyLoadWh / 1000).toFixed(2)} <span className="text-[10px] sm:text-xs text-slate-500 dark:text-neutral-400 font-normal tracking-wide uppercase ml-1">kWh/day</span>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none p-5 sm:p-6 xl:p-8 flex flex-col justify-between transition-colors duration-300">
-          <div className="flex items-center justify-between pb-4 sm:pb-6 border-b border-slate-100 dark:border-neutral-800 transition-colors">
-            <p className="text-[8px] sm:text-[9px] font-bold text-slate-500 dark:text-neutral-500 uppercase tracking-[0.2em]">Required Array Size</p>
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-transparent shadow-sm dark:shadow-none transition-colors">
-              <SunMedium className="h-4 w-4 text-amber-600 dark:text-[#FFE600]" />
-            </div>
+        <div className="bg-white dark:bg-[#181818] rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-colors duration-300">
+          <div className="flex items-center justify-between pb-4 sm:pb-6">
+            <p className="text-[10px] font-semibold text-slate-700 dark:text-neutral-300 uppercase tracking-[0.15em] whitespace-nowrap">Required Array Size</p>
+            <SunMedium className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-500 flex-shrink-0 ml-2" />
           </div>
-          <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tighter mt-4 sm:mt-6 transition-colors truncate">
-            {(results.requiredPvArraySizeW / 1000).toFixed(2)} <span className="text-[8px] sm:text-[10px] text-slate-500 dark:text-neutral-500 font-sans tracking-[0.1em] uppercase ml-1">kW</span>
+          <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-slate-900 dark:text-white mt-2 sm:mt-4 transition-colors whitespace-nowrap">
+            {(results.requiredPvArraySizeW / 1000).toFixed(2)} <span className="text-[10px] sm:text-xs text-slate-500 dark:text-neutral-400 font-normal tracking-wide uppercase ml-1">kW</span>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none p-5 sm:p-6 xl:p-8 flex flex-col justify-between transition-colors duration-300">
-          <div className="flex items-center justify-between pb-4 sm:pb-6 border-b border-slate-100 dark:border-neutral-800 transition-colors">
-            <p className="text-[8px] sm:text-[9px] font-bold text-slate-500 dark:text-neutral-500 uppercase tracking-[0.2em]">Battery Capacity</p>
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-transparent shadow-sm dark:shadow-none transition-colors">
-              <BatteryCharging className="h-4 w-4 text-slate-900 dark:text-white" />
-            </div>
+        <div className="bg-white dark:bg-[#181818] rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-colors duration-300">
+          <div className="flex items-center justify-between pb-4 sm:pb-6">
+            <p className="text-[10px] font-semibold text-slate-700 dark:text-neutral-300 uppercase tracking-[0.15em] whitespace-nowrap">Battery Capacity</p>
+            <BatteryCharging className="h-4 w-4 sm:h-5 sm:w-5 text-slate-700 dark:text-neutral-300 flex-shrink-0 ml-2" />
           </div>
-          <div className="flex flex-col mt-4 sm:mt-6 transition-colors">
-            <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tighter truncate">
-              {(results.requiredBatteryCapacityWh / 1000).toFixed(2)} <span className="text-[8px] sm:text-[10px] text-slate-500 dark:text-neutral-500 font-sans tracking-[0.1em] uppercase ml-1">kWh</span>
+          <div className="flex flex-col mt-2 sm:mt-4 transition-colors">
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-slate-900 dark:text-white whitespace-nowrap">
+              {(results.requiredBatteryCapacityWh / 1000).toFixed(2)} <span className="text-[10px] sm:text-xs text-slate-500 dark:text-neutral-400 font-normal tracking-wide uppercase ml-1">kWh</span>
             </div>
-            <p className="text-[9px] sm:text-[10px] text-amber-600 dark:text-[#FFE600] mt-1 sm:mt-2 font-mono tracking-widest uppercase truncate">
+            <p className="text-[10px] sm:text-[11px] text-amber-600 dark:text-amber-500 mt-2 sm:mt-3 font-medium tracking-wide uppercase whitespace-nowrap">
               {results.requiredBatteryCapacityAh.toFixed(0)} Ah
             </p>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none p-5 sm:p-6 xl:p-8 flex flex-col justify-between transition-colors duration-300">
-          <div className="flex items-center justify-between pb-4 sm:pb-6 border-b border-slate-100 dark:border-neutral-800 transition-colors">
-            <p className="text-[8px] sm:text-[9px] font-bold text-slate-500 dark:text-neutral-500 uppercase tracking-[0.2em]">Inverter Size</p>
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center border border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-transparent shadow-sm dark:shadow-none transition-colors">
-              <Zap className="h-4 w-4 text-amber-600 dark:text-[#FFE600]" />
-            </div>
+        <div className="bg-white dark:bg-[#181818] rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-colors duration-300">
+          <div className="flex items-center justify-between pb-4 sm:pb-6">
+            <p className="text-[10px] font-semibold text-slate-700 dark:text-neutral-300 uppercase tracking-[0.15em] whitespace-nowrap">Inverter Size</p>
+            <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-500 flex-shrink-0 ml-2" />
           </div>
-          <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tighter mt-4 sm:mt-6 transition-colors truncate">
-            {(results.requiredInverterSizeW / 1000).toFixed(2)} <span className="text-[8px] sm:text-[10px] text-slate-500 dark:text-neutral-500 font-sans tracking-[0.1em] uppercase ml-1">kW</span>
+          <div className="text-3xl sm:text-4xl lg:text-5xl font-light text-slate-900 dark:text-white mt-2 sm:mt-4 transition-colors whitespace-nowrap">
+            {(results.requiredInverterSizeW / 1000).toFixed(2)} <span className="text-[10px] sm:text-xs text-slate-500 dark:text-neutral-400 font-normal tracking-wide uppercase ml-1">kW</span>
           </div>
         </div>
 
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:gap-8 mt-6 xl:mt-8">
-        <div className="bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none p-6 sm:p-8 transition-colors duration-300">
-          <div className="pb-4 border-b border-slate-100 dark:border-neutral-800 mb-6 transition-colors">
-            <h3 className="text-[11px] font-bold text-slate-900 dark:text-white uppercase tracking-[0.2em]">Load Distribution</h3>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
+        <div className="bg-white dark:bg-[#181818] rounded-3xl p-8 transition-colors duration-300">
+          <div className="pb-8 mb-6">
+            <h3 className="text-sm font-normal text-slate-900 dark:text-white uppercase tracking-widest">Load Distribution</h3>
           </div>
           <div className="h-[260px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -155,74 +147,69 @@ export function Dashboard({ results, rooms }: DashboardProps) {
           </div>
         </div>
 
-        <div className="bg-[#FFE600] p-6 sm:p-8 lg:p-10 flex flex-col justify-between transition-colors duration-300 rounded-3xl shadow-xl shadow-[#FFE600]/20 border border-[#FFE600] dark:border-transparent">
+        <div className="bg-[#FFE600] p-10 flex flex-col justify-between transition-colors duration-300 rounded-3xl shadow-none">
           <div>
-             <h3 className="text-[11px] sm:text-[12px] font-extrabold text-black uppercase tracking-[0.2em] mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3">
-               <Zap className="w-4 h-4" /> System Blueprint Summary
+             <h3 className="text-sm font-medium text-black uppercase tracking-widest mb-8 flex items-center gap-3">
+               <Zap className="w-4 h-4" /> Your Recommended System
              </h3>
-             <div className="grid grid-cols-2 sm:grid-cols-2 mx-auto sm:mx-0 gap-4 sm:gap-10">
+             <div className="grid grid-cols-1 sm:grid-cols-2 mx-auto sm:mx-0 gap-x-6 gap-y-8 sm:gap-y-10">
                <div className="group relative">
-                 <p className="text-[8px] sm:text-[9px] font-bold text-black/60 uppercase tracking-[0.15em] mb-1 sm:mb-2 border-b border-black/20 border-dashed pb-[1px] inline-block cursor-help">
+                 <p className="text-[10px] font-semibold text-black/70 uppercase tracking-widest mb-2 cursor-help whitespace-nowrap">
                     Total Daily Load
                  </p>
-                 <div className="absolute top-full left-0 mt-2 hidden sm:w-64 p-3 bg-slate-900 text-white text-[10px] rounded-lg shadow-xl group-hover:block z-10 font-medium normal-case tracking-normal">
-                   Calculated by multiplying the wattage of each appliance by its quantity, duty cycle, and daily hours of use.
+                 <div className="absolute top-full left-0 mt-2 hidden w-[200px] sm:w-64 p-3 bg-slate-900 text-white text-[10px] rounded-lg shadow-xl group-hover:block z-10 font-medium normal-case tracking-normal break-words">
+                   Sum of all appliance energy usage based on hours used per day.
                  </div>
-                 <p className="font-mono text-lg sm:text-2xl md:text-3xl font-extrabold text-black tracking-tighter truncate mt-1">{(results.totalDailyLoadWh / 1000).toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2})} <span className="text-[8px] sm:text-[10px] font-sans tracking-widest text-black/60">kWh</span></p>
+                 <p className="text-3xl md:text-4xl font-light text-black mt-1 whitespace-nowrap">{(results.totalDailyLoadWh / 1000).toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2})} <span className="text-sm tracking-wide text-black/70">kWh</span></p>
                </div>
                <div>
-                 <p className="text-[8px] sm:text-[9px] font-bold text-black/60 uppercase tracking-[0.15em] mb-1 sm:mb-2">Total Active Load</p>
-                 <p className="font-mono text-lg sm:text-2xl md:text-3xl font-extrabold text-black tracking-tighter truncate mt-1">{(results.totalContinuousLoadW / 1000).toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2})} <span className="text-[8px] sm:text-[10px] font-sans tracking-widest text-black/60">kW</span></p>
+                 <p className="text-[10px] font-semibold text-black/70 uppercase tracking-widest mb-2 whitespace-nowrap">Total Active Load</p>
+                 <p className="text-3xl md:text-4xl font-light text-black mt-1 whitespace-nowrap">{(results.totalContinuousLoadW / 1000).toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2})} <span className="text-sm tracking-wide text-black/70">kW</span></p>
                </div>
-               <div className="col-span-2 pt-4 sm:pt-6 border-t border-black/10">
-                 <p className="text-[8px] sm:text-[9px] font-bold text-black/60 uppercase tracking-[0.15em] mb-1 sm:mb-2">Min. Inverter Rating</p>
-                 <p className="font-mono text-2xl sm:text-4xl md:text-5xl font-extrabold text-black tracking-tighter truncate">{Math.ceil(results.requiredInverterSizeW / 1000)} <span className="text-[10px] sm:text-sm font-sans tracking-widest text-black/60 ml-1 sm:ml-2">kVA</span></p>
-               </div>
-               <div className="col-span-2 pt-4 sm:pt-6 border-t border-black/10">
-                 <p className="text-[8px] sm:text-[9px] font-bold text-black/60 uppercase tracking-[0.15em] mb-1 sm:mb-2">Estimated Investment</p>
-                 <p className="font-mono text-xl sm:text-3xl md:text-4xl font-extrabold text-black tracking-tighter truncate">₦ {results.totalEstimatedCostNGN.toLocaleString('en-US', {maximumFractionDigits:0})}</p>
-                 <p className="text-[9px] sm:text-xs text-black/60 mt-2 font-medium">Includes Panels, Batteries, Inverter & Standard Installation</p>
+               <div className="sm:col-span-2 pt-4 border-t sm:border-t-0 border-black/10">
+                 <p className="text-[10px] font-semibold text-black/70 uppercase tracking-widest mb-2 whitespace-nowrap">Min. Inverter Rating</p>
+                 <p className="text-5xl md:text-6xl font-semibold text-black tracking-tight whitespace-nowrap">{Math.ceil(results.requiredInverterSizeW / 1000)} <span className="text-2xl font-light tracking-wide text-black/70 ml-2">kVA</span></p>
                </div>
              </div>
           </div>
         </div>
 
-        <div className="xl:col-span-2 bg-white dark:bg-[#181818] border border-slate-200/80 dark:border-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none p-6 sm:p-8 transition-colors duration-300">
-           <div className="pb-4 border-b border-slate-100 dark:border-neutral-800 mb-6 flex items-center gap-2">
+        <div className="xl:col-span-2 bg-white dark:bg-[#181818] rounded-3xl p-8 transition-colors duration-300 mt-8">
+           <div className="pb-8 mb-6 flex items-center gap-2">
              <Info className="w-5 h-5 text-amber-500" />
-             <h3 className="text-[11px] font-bold text-slate-900 dark:text-white uppercase tracking-[0.2em] flex-1">Energy Insights & Optimization</h3>
+             <h3 className="text-sm font-normal text-slate-900 dark:text-white uppercase tracking-widest flex-1">Energy Insights & Optimization</h3>
              <button 
                onClick={() => window.print()} 
-               className="text-[9px] font-bold uppercase tracking-wider text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors bg-slate-100 dark:bg-white/5 py-1.5 px-3 rounded-lg border border-slate-200 dark:border-white/10"
+               className="text-[10px] font-medium uppercase tracking-wider text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
              >
                Export / Print
              </button>
            </div>
            
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <div className="space-y-4">
-               <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-500 flex items-center gap-2">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+             <div className="space-y-6">
+               <h4 className="text-xs font-normal uppercase tracking-widest text-slate-400 dark:text-neutral-500 flex items-center gap-2">
                  <TrendingDown className="w-4 h-4" /> Top Energy Consumers
                </h4>
                {loadData.length > 0 ? (
-                 <ul className="space-y-3">
+                 <ul className="space-y-4">
                    {loadData.slice(0, 3).map((item, idx) => (
-                     <li key={idx} className="flex justify-between items-center text-sm p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/5">
-                        <span className="font-medium text-slate-900 dark:text-white truncate pr-4">{item.name}</span>
-                        <span className="font-mono text-amber-600 dark:text-amber-500 font-bold whitespace-nowrap">{(item.value / 1000).toFixed(2)} kWh/d</span>
+                     <li key={idx} className="flex justify-between items-center text-sm">
+                        <span className="font-normal text-slate-900 dark:text-white truncate pr-4">{item.name}</span>
+                        <span className="text-amber-500 font-normal whitespace-nowrap">{(item.value / 1000).toFixed(2)} kWh/d</span>
                      </li>
                    ))}
                  </ul>
                ) : (
-                 <p className="text-sm text-slate-500 italic">No appliances configured yet.</p>
+                 <p className="text-sm text-slate-400 font-light">No appliances configured yet.</p>
                )}
              </div>
              <div>
-               <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-neutral-500 mb-4">How to reduce cost?</h4>
-               <ul className="text-sm text-slate-600 dark:text-neutral-400 space-y-3 list-disc pl-5 marker:text-amber-500">
-                 <li><strong className="text-slate-900 dark:text-white">Reduce usage hours:</strong> For heavy consumers like ACs or Pumps, turning them off just 1-2 hours earlier drastically reduces battery size.</li>
-                 <li><strong className="text-slate-900 dark:text-white">Run heavy loads on Sun power:</strong> Use pumping machines and microwaves during peak sun hours (10am - 2pm) directly off solar panels to save battery.</li>
-                 <li><strong className="text-slate-900 dark:text-white">Upgrade efficiency:</strong> Use inverter ACs and inverter fridges to spread the surge and reduce duty cycles.</li>
+               <h4 className="text-xs font-normal uppercase tracking-widest text-slate-400 dark:text-neutral-500 mb-6">How to reduce cost?</h4>
+               <ul className="text-sm text-slate-600 dark:text-neutral-400 space-y-4 list-none p-0 font-light leading-relaxed">
+                 <li><strong className="text-slate-900 dark:text-white font-medium block mb-1">Reduce usage hours</strong> For heavy consumers like ACs or Pumps, turning them off just 1-2 hours earlier drastically reduces battery size.</li>
+                 <li><strong className="text-slate-900 dark:text-white font-medium block mb-1">Run heavy loads on Sun power</strong> Use pumping machines and microwaves during peak sun hours (10am - 2pm) directly off solar panels to save battery.</li>
+                 <li><strong className="text-slate-900 dark:text-white font-medium block mb-1">Upgrade efficiency</strong> Use inverter ACs and inverter fridges to spread the surge and reduce duty cycles.</li>
                </ul>
              </div>
            </div>

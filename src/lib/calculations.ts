@@ -2,26 +2,36 @@ import { Room, SystemConfig, CalculationResults } from '../types';
 
 export function calculateSystemRequirements(rooms: Room[], config: SystemConfig): CalculationResults {
   let totalDailyLoadWh = 0;
-  let totalSurgeLoadW = 0;
   let totalContinuousLoadW = 0;
+  let maxSurgeW = 0;
 
   rooms.forEach(room => {
     room.appliances.forEach(app => {
-      // Duty cycle logic (e.g. fridge runs 8 hours a day, but duty cycle is 50%, so it uses half the power per hour)
-      const dutyCycle = app.dutyCycle ?? 1;
-      const dailyWh = app.continuousWatts * app.hoursPerDay * app.quantity * dutyCycle;
+      // Daily Load: watts × hours × quantity
+      const dailyWh = app.continuousWatts * app.hoursPerDay * app.quantity;
       totalDailyLoadWh += dailyWh;
       
-      const continuousW = app.continuousWatts * app.quantity;
-      totalContinuousLoadW += continuousW;
+      // Raw active load
+      totalContinuousLoadW += app.continuousWatts * app.quantity;
 
-      if (app.surgeWatts > totalSurgeLoadW) {
-        totalSurgeLoadW = app.surgeWatts;
+      if (app.surgeWatts > maxSurgeW) {
+        maxSurgeW = app.surgeWatts;
       }
     });
   });
 
-  const requiredInverterSizeW = (totalContinuousLoadW + totalSurgeLoadW) / (config.inverterEfficiency / 100);
+  // Apply a diversity factor of 0.8 for simultaneous running load
+  const activeLoadW = totalContinuousLoadW * 0.8;
+  const peakLoadW = activeLoadW + maxSurgeW;
+
+  // Inverter rating: (peak load) × 1.25 safety factor
+  const rawInverterVA = (peakLoadW * 1.25) / (config.inverterEfficiency / 100);
+  const rawInverterKVA = rawInverterVA / 1000;
+  
+  const standardInverterSizes = [1, 2, 3, 5, 7.5, 10, 15, 20, 30, 50, 100];
+  let standardKVA = standardInverterSizes.find(size => size >= rawInverterKVA) || Math.ceil(rawInverterKVA);
+
+  const requiredInverterSizeW = standardKVA * 1000;
   
   // Battery Capacity (Wh) = (Total Daily Load * Days of Autonomy) / Depth of Discharge
   // Applying an additional efficiency factor for inverter losses
@@ -32,29 +42,13 @@ export function calculateSystemRequirements(rooms: Room[], config: SystemConfig)
   // Assuming overall system efficiency of 75% for solar to battery to load
   const requiredPvArraySizeW = totalDailyLoadWh / (config.sunHours * 0.75);
 
-  // Cost Estimations (NGN)
-  // PV Panels: ~600 NGN per Watt
-  const estimatedPvCostNGN = requiredPvArraySizeW * 600;
-  // Inverter: ~250 NGN per Watt (using kVA sizing practically, but rough estimate per W)
-  const estimatedInverterCostNGN = requiredInverterSizeW * 250;
-  // Battery: ~250,000 NGN per kWh
-  const estimatedBatteryCostNGN = (requiredBatteryCapacityWh / 1000) * 250000;
-  
-  // Total plus ~20% for installation/accessories
-  const accessoriesAndInstall = (estimatedPvCostNGN + estimatedInverterCostNGN + estimatedBatteryCostNGN) * 0.2;
-  const totalEstimatedCostNGN = estimatedPvCostNGN + estimatedInverterCostNGN + estimatedBatteryCostNGN + accessoriesAndInstall;
-
   return {
     totalDailyLoadWh,
-    totalSurgeLoadW,
-    totalContinuousLoadW,
+    totalSurgeLoadW: maxSurgeW,
+    totalContinuousLoadW: activeLoadW,
     requiredBatteryCapacityWh,
     requiredBatteryCapacityAh,
     requiredInverterSizeW,
-    requiredPvArraySizeW,
-    estimatedBatteryCostNGN,
-    estimatedInverterCostNGN,
-    estimatedPvCostNGN,
-    totalEstimatedCostNGN
+    requiredPvArraySizeW
   };
 }

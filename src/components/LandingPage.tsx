@@ -31,10 +31,10 @@ export function LandingPage({ onStart, theme, toggleTheme }: LandingPageProps) {
         </div>
         
         <div className="hidden lg:flex flex-1 justify-center items-center gap-10">
-          <a href="#" onClick={(e) => { e.preventDefault(); onStart(); }} className="text-[10px] font-bold tracking-[0.15em] text-amber-600 dark:text-[#FFE600] uppercase border-b-2 border-amber-600 dark:border-[#FFE600] pb-1">Calculators</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); alert('Systems module coming soon!'); }} className="text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white transition-colors uppercase">Systems</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); alert('Technical Docs coming soon!'); }} className="text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white transition-colors uppercase">Technical Docs</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); alert('Case Studies coming soon!'); }} className="text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white transition-colors uppercase">Case Studies</a>
+          <button onClick={onStart} className="text-[10px] font-bold tracking-[0.15em] text-amber-600 dark:text-[#FFE600] uppercase border-b-2 border-amber-600 dark:border-[#FFE600] pb-1 cursor-pointer">Calculators</button>
+          <button onClick={() => alert('Systems module coming soon!')} className="text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white transition-colors uppercase cursor-pointer">Systems</button>
+          <button onClick={() => alert('Technical Docs coming soon!')} className="text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white transition-colors uppercase cursor-pointer">Technical Docs</button>
+          <button onClick={() => alert('Case Studies coming soon!')} className="text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white transition-colors uppercase cursor-pointer">Case Studies</button>
         </div>
 
         <div className="flex-1 flex justify-end items-center gap-4 md:gap-6">
@@ -105,10 +105,10 @@ export function LandingPage({ onStart, theme, toggleTheme }: LandingPageProps) {
             transition={{ duration: 0.2 }}
             className="absolute top-[88px] left-0 right-0 py-8 px-6 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10 rounded-none z-50 flex flex-col gap-6 lg:hidden shadow-2xl origin-top"
           >
-            <a href="#" onClick={(e) => { e.preventDefault(); onStart(); }} className="text-[10px] font-bold tracking-[0.15em] text-amber-600 dark:text-[#FFE600] uppercase border-b border-amber-100 dark:border-amber-900/30 pb-4 hover:text-amber-700 dark:hover:text-amber-400 transition-colors">Calculators</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); alert('Systems module coming soon!'); }} className="text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-neutral-500 transition-colors uppercase border-b border-slate-100 dark:border-white/5 pb-4">Systems</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); alert('Technical Docs coming soon!'); }} className="text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-neutral-500 transition-colors uppercase border-b border-slate-100 dark:border-white/5 pb-4">Technical Docs</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); alert('Case Studies coming soon!'); }} className="text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-neutral-500 transition-colors uppercase border-b border-slate-100 dark:border-white/5 pb-4">Case Studies</a>
+            <button onClick={onStart} className="text-left text-[10px] font-bold tracking-[0.15em] text-amber-600 dark:text-[#FFE600] uppercase border-b border-amber-100 dark:border-amber-900/30 pb-4 hover:text-amber-700 dark:hover:text-amber-400 transition-colors cursor-pointer">Calculators</button>
+            <button onClick={() => alert('Systems module coming soon!')} className="text-left text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-neutral-500 transition-colors uppercase border-b border-slate-100 dark:border-white/5 pb-4 cursor-pointer">Systems</button>
+            <button onClick={() => alert('Technical Docs coming soon!')} className="text-left text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-neutral-500 transition-colors uppercase border-b border-slate-100 dark:border-white/5 pb-4 cursor-pointer">Technical Docs</button>
+            <button onClick={() => alert('Case Studies coming soon!')} className="text-left text-[10px] font-bold tracking-[0.15em] text-slate-500 dark:text-neutral-500 hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-neutral-500 transition-colors uppercase border-b border-slate-100 dark:border-white/5 pb-4 cursor-pointer">Case Studies</button>
             <div onClick={() => alert('Account Settings coming soon!')} className="flex items-center gap-4 pt-2 cursor-pointer group">
               <div className="w-8 h-8 rounded-none border border-slate-200 dark:border-neutral-600 bg-slate-50 dark:bg-white/5 flex items-center justify-center transition-colors group-hover:border-amber-500 dark:group-hover:border-[#FFE600] group-hover:text-amber-600 dark:group-hover:text-[#FFE600]">
                 <User className="w-4 h-4 text-slate-500 dark:text-neutral-400 group-hover:text-amber-600 dark:group-hover:text-[#FFE600] transition-colors" strokeWidth={1.5} />
@@ -304,10 +304,10 @@ export function LandingPage({ onStart, theme, toggleTheme }: LandingPageProps) {
           </div>
           
           <div className="flex-[2] flex justify-center flex-wrap gap-6 md:gap-10 text-[9px] font-bold tracking-[0.2em] text-slate-500 dark:text-neutral-600 uppercase text-center">
-            <a href="#" onClick={(e) => { e.preventDefault(); alert('Privacy Policy coming soon'); }} className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); alert('Terms of Service coming soon'); }} className="hover:text-slate-900 dark:hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); alert('Engineering Standards coming soon'); }} className="hover:text-slate-900 dark:hover:text-white transition-colors">Engineering Standards</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); alert('Contact us coming soon'); }} className="hover:text-slate-900 dark:hover:text-white transition-colors">Contact</a>
+            <button onClick={() => alert('Privacy Policy coming soon')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">Privacy Policy</button>
+            <button onClick={() => alert('Terms of Service coming soon')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">Terms of Service</button>
+            <button onClick={() => alert('Engineering Standards coming soon')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">Engineering Standards</button>
+            <button onClick={() => alert('Contact us coming soon')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">Contact</button>
           </div>
 
           <div className="flex-1 flex justify-center lg:justify-end text-center mt-4 lg:mt-0">
