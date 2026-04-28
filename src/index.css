@@ -10,7 +10,7 @@
 
 @layer base {
   body {
-    @apply bg-slate-100 dark:bg-[#0a0a0a] text-slate-900 dark:text-white font-sans antialiased transition-colors duration-300;
+    @apply bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white font-sans antialiased transition-colors duration-300;
   }
 
   button, a, select, [role="button"] {

@@ -23,6 +23,7 @@ function ApplianceComboBox({
   onSelectPreset: (preset: any) => void 
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,52 +42,131 @@ function ApplianceComboBox({
     preset.name.toLowerCase().includes(value.toLowerCase())
   );
 
+  useEffect(() => {
+    setFocusedIndex(-1);
+  }, [value, isOpen]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen) return;
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setFocusedIndex(prev => (prev < filteredPresets.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setFocusedIndex(prev => (prev > 0 ? prev - 1 : prev));
+    } else if (e.key === 'Enter') {
+      if (focusedIndex >= 0 && focusedIndex < filteredPresets.length) {
+        e.preventDefault();
+        const preset = filteredPresets[focusedIndex];
+        onChange(preset.name);
+        onSelectPreset(preset);
+        setIsOpen(false);
+      }
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  };
+
   return (
     <div ref={wrapperRef} className="relative w-full">
       <Input
         value={value}
         onChange={(e) => {
           onChange(e.target.value);
+          setIsOpen(true);
         }}
         onFocus={() => {
            setIsOpen(true);
         }}
-        placeholder="Search modern electric appliances..."
-        className="w-full bg-white dark:bg-black/20 border border-slate-200/80 dark:border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:focus:border-[#FFE600] transition-all relative z-10"
+        onKeyDown={handleKeyDown}
+        placeholder="Type to search appliances..."
+        className="w-full bg-slate-50 dark:bg-[#111] border border-slate-200/80 dark:border-neutral-800 focus:border-amber-500 rounded-xl px-4 py-2.5 outline-none text-base text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all relative z-10 font-medium"
         autoComplete="off"
       />
       
       {isOpen && (
-        <div className="absolute z-20 w-full mt-2 bg-white dark:bg-[#181818] border border-slate-200 dark:border-neutral-800 rounded-xl shadow-xl shadow-black/5 dark:shadow-none max-h-[240px] overflow-y-auto">
+        <div className="absolute z-20 w-fit min-w-[200px] max-w-full mt-1 bg-white dark:bg-[#181818] border border-slate-200 dark:border-neutral-800 rounded-xl shadow-xl shadow-black/5 dark:shadow-none max-h-[200px] overflow-y-auto">
           {filteredPresets.length === 0 ? (
-            <div className="p-4 text-xs text-slate-500 dark:text-neutral-500 text-center font-bold tracking-[0.1em] uppercase">No presets matching "{value}"</div>
+            <div className="p-3 text-xs text-slate-400 text-center font-medium">No matches</div>
           ) : (
-            filteredPresets.map((preset) => (
+            filteredPresets.map((preset, index) => (
               <div 
                 key={preset.name}
-                className="px-4 py-3 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer flex justify-between items-center transition-colors border-b border-slate-100 dark:border-neutral-800/50 last:border-0"
-                onClick={() => {
+                className={`px-3 py-2 cursor-pointer flex justify-between items-center transition-colors border-b border-slate-100 dark:border-neutral-800/50 last:border-0 ${
+                  focusedIndex === index ? 'bg-slate-100 dark:bg-white/10' : 'hover:bg-slate-50 dark:hover:bg-white/5'
+                }`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
                   onChange(preset.name);
                   onSelectPreset(preset);
                   setIsOpen(false);
                 }}
+                onMouseEnter={() => setFocusedIndex(index)}
               >
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-slate-900 dark:text-white">{preset.name}</span>
-                  <span className="text-[10px] text-slate-500 dark:text-neutral-500 tracking-wider">
-                     {preset.surgeWatts > preset.continuousWatts ? `Surge: ${preset.surgeWatts}W` : 'No surge'}
-                  </span>
-                </div>
-                <div className="flex flex-col items-end">
-                   <span className="text-xs font-mono font-bold text-amber-600 dark:text-[#FFE600]">{preset.continuousWatts}W</span>
-                   <span className="text-[9px] text-slate-400 dark:text-neutral-600 uppercase tracking-widest mt-0.5">{preset.dutyCycle * 100}% DC</span>
-                </div>
+                <span className="text-sm font-medium text-slate-900 dark:text-white truncate mr-4">{preset.name}</span>
+                <span className="text-xs font-mono font-medium text-slate-500 dark:text-neutral-400 shrink-0">{preset.continuousWatts}W</span>
               </div>
             ))
           )}
         </div>
       )}
     </div>
+  );
+}
+
+export function NumericInput({ 
+  value, 
+  onChange, 
+  min = 0, 
+  max,
+  step,
+  className
+}: { 
+  value: number; 
+  onChange: (val: number) => void;
+  min?: number;
+  max?: number;
+  step?: string | number;
+  className?: string;
+}) {
+  const [localValue, setLocalValue] = useState<string>(value.toString());
+
+  // Update local value if external value changes (e.g. preset loaded)
+  useEffect(() => {
+    setLocalValue(value.toString());
+  }, [value]);
+
+  const handleBlur = () => {
+    let parsed = parseFloat(localValue);
+    if (isNaN(parsed)) {
+      parsed = min;
+    } else {
+      if (typeof max !== 'undefined' && parsed > max) parsed = max;
+      if (typeof min !== 'undefined' && parsed < min) parsed = min;
+    }
+    setLocalValue(parsed.toString());
+    onChange(parsed);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.currentTarget.blur();
+    }
+  };
+
+  return (
+    <input
+      type="number"
+      min={min}
+      max={max}
+      step={step}
+      value={localValue}
+      onChange={(e) => setLocalValue(e.target.value)}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      className={className}
+    />
   );
 }
 
@@ -136,7 +216,7 @@ export function LoadBuilder({ rooms, setRooms, onNext }: LoadBuilderProps) {
   };
 
   const updateAppliance = (roomId: string, appId: string, field: keyof Appliance, value: string | number) => {
-    setRooms(rooms.map(room => {
+    setRooms(prev => prev.map(room => {
       if (room.id === roomId) {
         return {
           ...room,
@@ -193,27 +273,36 @@ export function LoadBuilder({ rooms, setRooms, onNext }: LoadBuilderProps) {
   );
 
   return (
-    <div className="space-y-12">
-      <div className="flex flex-col xl:flex-row gap-6">
-        <div className="bg-white dark:bg-[#181818] p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none border border-slate-200/80 dark:border-white/5 flex flex-col sm:flex-row items-end gap-6 transition-colors duration-300 flex-1">
-          <div className="grid gap-3 flex-1 w-full">
-            <Label htmlFor="newRoom" className="text-[10px] uppercase tracking-[0.15em] text-slate-500 dark:text-neutral-500 font-bold ml-1">Add New Zone / Room</Label>
-            <Input 
-              id="newRoom" 
-              placeholder="e.g., Kitchen, Server Room, Main Office" 
-              value={newRoomName}
-              onChange={(e) => setNewRoomName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && addRoom()}
-              className="w-full bg-slate-50 dark:bg-black/20 border border-slate-200/80 dark:border-neutral-800 rounded-xl px-4 py-3 outline-none text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:focus:border-[#FFE600] transition-all h-12"
-            />
+    <div className="space-y-16">
+      <div className="flex flex-col xl:flex-row gap-8">
+        <div className="bg-white dark:bg-[#181818] p-10 lg:p-12 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] border border-slate-200/50 dark:border-white/5 flex flex-col transition-colors duration-300 flex-1 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+          <div className="mb-8">
+            <span className="inline-block bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-neutral-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">Start Here</span>
+            <p className="text-slate-500 dark:text-neutral-400 font-light text-lg">Add a room to begin mapping your energy usage</p>
           </div>
-          <button onClick={addRoom} className="bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-900 dark:text-white border border-slate-200/80 dark:border-white/10 rounded-xl text-[10px] uppercase tracking-[0.15em] h-12 px-8 font-bold w-full sm:w-auto transition-all flex justify-center items-center gap-2">
-            <Plus className="w-4 h-4" /> Add Zone
-          </button>
+          <div className="flex flex-col sm:flex-row items-end gap-4 sm:gap-6 w-full mt-auto">
+            <div className="flex-1 w-full relative">
+              <input 
+                id="newRoom" 
+                placeholder="e.g., Living Room, Kitchen, Bedroom" 
+                value={newRoomName}
+                onChange={(e) => setNewRoomName(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && addRoom()}
+                className="w-full bg-slate-50 dark:bg-[#111] border border-slate-200/80 dark:border-neutral-800 focus:border-amber-500 rounded-xl px-5 py-3 outline-none text-base text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-600 focus:ring-2 focus:ring-amber-500/20 transition-all font-light h-14"
+              />
+            </div>
+            <button onClick={addRoom} className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-black rounded-xl text-sm font-medium h-14 px-8 w-full sm:w-auto transition-all flex justify-center items-center gap-2 shadow-lg shadow-black/5 dark:shadow-white/5 shrink-0 cursor-pointer">
+              <Plus className="w-5 h-5" /> Add Room
+            </button>
+          </div>
         </div>
 
-        <div className="bg-white dark:bg-[#181818] p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none border border-slate-200/80 dark:border-white/5 flex flex-col gap-4 transition-colors duration-300 xl:w-96">
-           <Label className="text-[10px] uppercase tracking-[0.15em] text-slate-500 dark:text-neutral-500 font-bold ml-1">Quick Presets</Label>
+        <div className="bg-slate-50 dark:bg-[#141414] border border-slate-200/50 dark:border-white/5 p-10 lg:p-12 rounded-3xl flex flex-col justify-center gap-2 transition-colors duration-300 xl:w-[400px]">
+           <div>
+             <h3 className="text-sm font-medium text-slate-700 dark:text-neutral-300 mb-1">Quick Presets</h3>
+             <p className="text-xs text-slate-500 dark:text-neutral-500 font-light mb-6">Or start instantly with a preset</p>
+           </div>
            <div className="flex flex-wrap gap-2">
              {Object.keys(homePresets).map(presetKey => (
                <button
@@ -221,9 +310,9 @@ export function LoadBuilder({ rooms, setRooms, onNext }: LoadBuilderProps) {
                   onClick={() => {
                      setPresetToLoad(presetKey);
                   }}
-                  className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-[#FFE600] border border-amber-500/20 rounded-lg px-4 py-2 text-[10px] font-bold uppercase tracking-[0.1em] transition-colors flex items-center gap-2"
+                  className="bg-white dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-neutral-400 border border-slate-200/80 dark:border-white/10 rounded-lg px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.1em] transition-colors flex items-center gap-2 cursor-pointer shadow-sm shadow-black/5 dark:shadow-none"
                >
-                 <Home className="w-3 h-3" />
+                 <Home className="w-3.5 h-3.5" />
                  {homePresets[presetKey].name}
                </button>
              ))}
@@ -231,36 +320,38 @@ export function LoadBuilder({ rooms, setRooms, onNext }: LoadBuilderProps) {
         </div>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-12">
+        {rooms.length === 0 && (
+          <div className="text-center py-20 bg-white/50 dark:bg-[#181818]/50 rounded-3xl border border-dashed border-slate-300 dark:border-neutral-800">
+            <p className="text-slate-500 dark:text-neutral-400 font-light text-lg">Create a room to begin adding appliances</p>
+          </div>
+        )}
         {rooms.map(room => (
-          <div key={room.id} className="border border-slate-200/80 dark:border-white/5 bg-white dark:bg-[#181818] rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-colors duration-300">
-            <div className="py-6 px-8 border-b border-slate-100 dark:border-neutral-800 flex flex-row items-center justify-between transition-colors bg-white dark:bg-transparent">
-              <div className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-4 transition-colors">
-                <div className="w-10 h-10 rounded-xl border border-slate-200 dark:border-neutral-800 flex items-center justify-center transition-colors bg-slate-50 dark:bg-transparent shadow-sm dark:shadow-none">
-                  <Settings2 className="w-5 h-5 text-slate-400 dark:text-neutral-500" />
-                </div>
+          <div key={room.id} className="bg-white dark:bg-[#181818] rounded-3xl transition-colors duration-300 p-8 lg:p-12">
+            <div className="pb-8 flex flex-row items-center justify-between transition-colors">
+              <div className="text-2xl font-light text-slate-900 dark:text-white flex items-center gap-4 transition-colors">
                 {room.name}
               </div>
               <div className="flex gap-4">
-                <button onClick={() => addAppliance(room.id)} className="text-[10px] uppercase tracking-[0.15em] border border-slate-200 dark:border-neutral-700 text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white hover:border-amber-600 dark:hover:border-[#FFE600] px-4 py-2 rounded-xl transition-all font-bold flex items-center gap-2 bg-slate-50 dark:bg-transparent shadow-sm dark:shadow-none">
-                  <Plus className="w-3 h-3" /> Add Load
+                <button onClick={() => addAppliance(room.id)} className="text-xs uppercase tracking-widest text-amber-600 hover:text-amber-700 dark:text-amber-500 px-4 py-2 transition-colors font-medium flex items-center gap-2">
+                  <Plus className="w-4 h-4" /> Add Load
                 </button>
-                <button onClick={() => setItemToDelete({ type: 'room', roomId: room.id })} className="text-slate-400 dark:text-neutral-500 hover:text-red-500 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors p-2">
-                  <Trash2 className="w-4 h-4" />
+                <button onClick={() => setItemToDelete({ type: 'room', roomId: room.id })} className="text-slate-400 hover:text-red-500 transition-colors p-2">
+                  <Trash2 className="w-5 h-5" />
                 </button>
               </div>
             </div>
             <div className="p-0">
               {room.appliances.length === 0 ? (
-                <div className="p-12 text-center text-slate-400 dark:text-neutral-600 text-xs font-bold uppercase tracking-[0.1em]">
+                <div className="py-12 text-center text-slate-400 dark:text-neutral-600 text-sm font-light">
                   No loads parameterized in this zone.
                 </div>
               ) : (
-                <div className="divide-y divide-slate-100 dark:divide-neutral-800/50">
+                <div className="space-y-6">
                   {room.appliances.map(app => (
-                    <div key={app.id} className="p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-6 xl:gap-8 items-end bg-slate-50 dark:bg-transparent transition-colors">
+                    <div key={app.id} className="group grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-6 xl:gap-8 items-end p-4 -mx-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
                       <div className="sm:col-span-2 xl:col-span-3">
-                        <Label className="text-[9px] uppercase tracking-[0.15em] text-slate-500 dark:text-neutral-500 font-bold mb-3 block ml-1">Appliance Profile</Label>
+                        <Label className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-neutral-500 font-normal mb-2 block">Appliance Profile</Label>
                         <ApplianceComboBox 
                           value={app.name}
                           onChange={(val) => {
@@ -280,40 +371,40 @@ export function LoadBuilder({ rooms, setRooms, onNext }: LoadBuilderProps) {
                         />
                       </div>
                       <div className="xl:col-span-2">
-                        <Label className="text-[9px] uppercase tracking-[0.15em] text-slate-500 dark:text-neutral-500 font-bold mb-3 block ml-1">Quantity</Label>
-                        <Input 
-                          type="number" min="1"
+                        <Label className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-neutral-500 font-normal mb-2 block">Qty</Label>
+                        <NumericInput 
+                          min={1}
                           value={app.quantity} 
-                          onChange={(e) => updateAppliance(room.id, app.id, 'quantity', parseInt(e.target.value) || 0)}
-                          className={`w-full bg-white dark:bg-black/20 border ${app.quantity < 1 ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200/80 dark:border-neutral-800 focus:border-amber-500 dark:focus:border-[#FFE600] focus:ring-amber-500/20'} rounded-xl px-4 py-2.5 text-sm font-mono text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 transition-all`}
+                          onChange={(val) => updateAppliance(room.id, app.id, 'quantity', val)}
+                          className={`w-full bg-slate-50 dark:bg-[#111] border ${app.quantity < 1 ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-slate-200/80 dark:border-neutral-800 focus:border-amber-500 focus:ring-amber-500/20'} rounded-xl px-4 py-2.5 outline-none text-base font-normal text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all`}
                         />
                       </div>
                       <div className="xl:col-span-2">
-                        <Label className="text-[9px] uppercase tracking-[0.15em] text-slate-500 dark:text-neutral-500 font-bold mb-3 block ml-1">Cont. Watts</Label>
-                        <Input 
-                          type="number" min="0"
+                        <Label className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-neutral-500 font-normal mb-2 block">Watts</Label>
+                        <NumericInput 
+                          min={0}
                           value={app.continuousWatts} 
-                          onChange={(e) => updateAppliance(room.id, app.id, 'continuousWatts', parseInt(e.target.value) || 0)}
-                          className={`w-full bg-white dark:bg-black/20 border ${app.continuousWatts < 0 ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200/80 dark:border-neutral-800 focus:border-amber-500 dark:focus:border-[#FFE600] focus:ring-amber-500/20'} rounded-xl px-4 py-2.5 text-sm font-mono text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 transition-all`}
+                          onChange={(val) => updateAppliance(room.id, app.id, 'continuousWatts', val)}
+                          className={`w-full bg-slate-50 dark:bg-[#111] border ${app.continuousWatts < 0 ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-slate-200/80 dark:border-neutral-800 focus:border-amber-500 focus:ring-amber-500/20'} rounded-xl px-4 py-2.5 outline-none text-base font-normal text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all`}
                         />
                       </div>
                       <div className="xl:col-span-2">
-                        <Label className="text-[9px] uppercase tracking-[0.15em] text-slate-500 dark:text-neutral-500 font-bold mb-3 block ml-1">Total Watts</Label>
-                        <div className="w-full bg-white/50 dark:bg-black/10 border border-transparent rounded-xl px-4 py-2.5 text-sm font-mono text-slate-500 dark:text-neutral-400 flex items-center h-[42px]">
+                        <Label className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-neutral-500 font-normal mb-2 block">Total</Label>
+                        <div className="w-full bg-slate-50 dark:bg-[#111] border border-transparent rounded-xl px-4 py-2.5 text-base font-normal text-slate-500 dark:text-neutral-400 flex items-center h-[46px]">
                           {app.continuousWatts * app.quantity} W
                         </div>
                       </div>
                       <div className="xl:col-span-2">
-                        <Label className="text-[9px] uppercase tracking-[0.15em] text-slate-500 dark:text-neutral-500 font-bold mb-3 block ml-1">Hrs / Day</Label>
-                        <Input 
-                          type="number" min="0" max="24" step="0.5"
+                        <Label className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-neutral-500 font-normal mb-2 block">Hrs / Day</Label>
+                        <NumericInput 
+                          min={0} max={24} step={0.5}
                           value={app.hoursPerDay} 
-                          onChange={(e) => updateAppliance(room.id, app.id, 'hoursPerDay', parseFloat(e.target.value) || 0)}
-                          className={`w-full bg-white dark:bg-black/20 border ${app.hoursPerDay < 0 || app.hoursPerDay > 24 ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200/80 dark:border-neutral-800 focus:border-amber-500 dark:focus:border-[#FFE600] focus:ring-amber-500/20'} rounded-xl px-4 py-2.5 text-sm font-mono text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 transition-all`}
+                          onChange={(val) => updateAppliance(room.id, app.id, 'hoursPerDay', val)}
+                          className={`w-full bg-slate-50 dark:bg-[#111] border ${app.hoursPerDay < 0 || app.hoursPerDay > 24 ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20 text-red-500' : 'border-slate-200/80 dark:border-neutral-800 focus:border-amber-500 focus:ring-amber-500/20'} rounded-xl px-4 py-2.5 outline-none text-base font-normal text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all`}
                         />
                       </div>
-                      <div className="sm:col-span-2 xl:col-span-1 flex justify-end mt-4 xl:mt-0 pb-1">
-                        <button onClick={() => setItemToDelete({ type: 'appliance', roomId: room.id, appId: app.id })} className="w-10 h-[42px] flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:text-neutral-600 dark:hover:text-red-500 dark:hover:bg-red-500/10 rounded-xl transition-all -mr-1">
+                      <div className="sm:col-span-2 xl:col-span-1 flex justify-end mt-4 xl:mt-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onClick={() => setItemToDelete({ type: 'appliance', roomId: room.id, appId: app.id })} className="w-10 h-[46px] flex items-center justify-center text-slate-300 hover:text-red-500 transition-colors">
                           <Trash2 className="w-5 h-5" strokeWidth={1.5} />
                         </button>
                       </div>

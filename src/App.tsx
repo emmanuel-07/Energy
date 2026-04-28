@@ -89,10 +89,10 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen print:h-auto overflow-hidden print:overflow-visible flex flex-col bg-slate-100 dark:bg-[#0a0a0a] text-slate-900 dark:text-white font-sans selection:bg-amber-400 dark:selection:bg-[#FFE600] selection:text-black transition-colors duration-300">
+    <div className="h-screen print:h-auto overflow-hidden print:overflow-visible flex flex-col bg-slate-50 dark:bg-[#0a0a0a] text-slate-900 dark:text-white font-sans selection:bg-amber-400 dark:selection:bg-[#FFE600] selection:text-black transition-colors duration-300">
       
       {/* Header */}
-      <header className="print:hidden bg-slate-100 dark:bg-[#0a0a0a] border-b border-slate-200/80 dark:border-white/5 py-4 px-6 md:px-8 z-30 relative flex-shrink-0 transition-colors duration-300">
+      <header className="print:hidden bg-slate-50 dark:bg-[#0a0a0a] border-b border-transparent py-6 px-8 md:px-12 z-30 relative flex-shrink-0 transition-colors duration-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <button 
@@ -117,7 +117,7 @@ export default function App() {
              <motion.button 
                whileHover={{ scale: 1.05 }}
                whileTap={{ scale: 0.95 }}
-               className="md:hidden relative w-9 h-9 rounded-xl border border-slate-200 dark:border-neutral-600 bg-white dark:bg-[#111] flex items-center justify-center transition-colors overflow-hidden text-slate-700 dark:text-neutral-300 hover:text-slate-900 dark:hover:text-white"
+               className="md:hidden cursor-pointer relative w-9 h-9 rounded-xl border border-slate-200 dark:border-neutral-600 bg-white dark:bg-[#111] flex items-center justify-center transition-colors overflow-hidden text-slate-700 dark:text-neutral-300 hover:text-slate-900 dark:hover:text-white"
                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
              >
                <AnimatePresence mode="wait">
@@ -165,10 +165,10 @@ export default function App() {
         </AnimatePresence>
 
         {/* Sidebar Navigation */}
-        <aside className={`print:hidden fixed md:relative inset-y-0 left-0 z-50 md:z-0 w-72 md:w-64 lg:w-72 flex flex-col border-r border-slate-200/80 dark:border-white/5 bg-slate-100 dark:bg-[#0a0a0a] overflow-y-auto print:overflow-visible transition-transform duration-300 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-          <div className="p-8">
-            <div className="flex items-center justify-between mb-6 border-b border-slate-200/80 dark:border-neutral-800 pb-4">
-               <h3 className="text-[10px] uppercase tracking-[0.15em] text-slate-500 dark:text-neutral-500 font-bold">Engine Stages</h3>
+        <aside className={`print:hidden fixed md:relative inset-y-0 left-0 z-50 md:z-0 w-72 md:w-64 lg:w-80 flex flex-col bg-slate-50 dark:bg-[#0a0a0a] overflow-y-auto print:overflow-visible transition-transform duration-300 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="p-8 md:p-12">
+            <div className="flex items-center justify-between mb-8 pb-4">
+               <h3 className="text-[10px] uppercase tracking-[0.15em] text-slate-400 dark:text-neutral-600 font-bold">Engine Stages</h3>
                <button onClick={() => setIsSidebarOpen(false)} className="md:hidden text-slate-500">
                   <X className="w-4 h-4" />
                </button>
@@ -176,34 +176,34 @@ export default function App() {
             <div className="flex flex-col gap-2">
               <button 
                 onClick={() => { setActiveTab('load'); setIsSidebarOpen(false); }}
-                className={`group px-5 py-4 text-left transition-all rounded-xl ${activeTab === 'load' ? 'bg-white dark:bg-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-200/60 dark:border-transparent' : 'hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent'}`}
+                className={`group cursor-pointer px-5 py-4 text-left transition-all rounded-xl ${activeTab === 'load' ? 'bg-white dark:bg-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-200/60 dark:border-transparent' : 'hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent'}`}
               >
-                <span className={`block text-[11px] font-bold uppercase tracking-[0.1em] ${activeTab === 'load' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-neutral-500 group-hover:text-slate-900 dark:group-hover:text-white'}`}>1. Load Mapping</span>
+                <span className={`block text-[11px] font-bold uppercase tracking-[0.1em] ${activeTab === 'load' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-neutral-500 group-hover:text-slate-900 dark:group-hover:text-white'}`}>1. Add Your Usage</span>
                 <span className="block max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-24 group-hover:opacity-100 group-hover:mt-2 text-[10px] tracking-normal normal-case font-medium text-slate-500 dark:text-neutral-400">
-                  Profile daily electrical loads room-by-room to determine absolute consumption constraints.
+                  List your rooms and appliances to calculate your energy needs.
                 </span>
               </button>
               <button 
                 disabled={hasInvalidInputs}
                 onClick={() => { setActiveTab('config'); setIsSidebarOpen(false); }}
-                className={`group px-5 py-4 text-left transition-all rounded-xl ${hasInvalidInputs ? 'opacity-50 cursor-not-allowed border flex items-center justify-between' : ''} ${activeTab === 'config' ? 'bg-white dark:bg-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-200/60 dark:border-transparent' : 'hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent'}`}
+                className={`group cursor-pointer px-5 py-4 text-left transition-all rounded-xl ${hasInvalidInputs ? 'opacity-50 cursor-not-allowed border flex items-center justify-between' : ''} ${activeTab === 'config' ? 'bg-white dark:bg-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-200/60 dark:border-transparent' : 'hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent'}`}
               >
                 <div>
-                  <span className={`block text-[11px] font-bold uppercase tracking-[0.1em] ${activeTab === 'config' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-neutral-500 group-hover:text-slate-900 dark:group-hover:text-white'}`}>2. System Config</span>
+                  <span className={`block text-[11px] font-bold uppercase tracking-[0.1em] ${activeTab === 'config' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-neutral-500 group-hover:text-slate-900 dark:group-hover:text-white'}`}>2. Review System</span>
                   <span className="block max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-24 group-hover:opacity-100 group-hover:mt-2 text-[10px] tracking-normal normal-case font-medium text-slate-500 dark:text-neutral-400">
-                    Configure architectural margins, days of autonomy, and inverter specifications.
+                    Fine-tune limits and requirements for your setup.
                   </span>
                 </div>
               </button>
               <button 
                 disabled={hasInvalidInputs}
                 onClick={() => { setActiveTab('results'); setIsSidebarOpen(false); }}
-                className={`group px-5 py-4 text-left transition-all rounded-xl ${hasInvalidInputs ? 'opacity-50 cursor-not-allowed border flex items-center justify-between' : ''} ${activeTab === 'results' ? 'bg-white dark:bg-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-200/60 dark:border-transparent' : 'hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent'}`}
+                className={`group cursor-pointer px-5 py-4 text-left transition-all rounded-xl ${hasInvalidInputs ? 'opacity-50 cursor-not-allowed border flex items-center justify-between' : ''} ${activeTab === 'results' ? 'bg-white dark:bg-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-200/60 dark:border-transparent' : 'hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent'}`}
               >
                 <div>
-                  <span className={`block text-[11px] font-bold uppercase tracking-[0.1em] ${activeTab === 'results' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-neutral-500 group-hover:text-slate-900 dark:group-hover:text-white'}`}>3. Blueprint</span>
+                  <span className={`block text-[11px] font-bold uppercase tracking-[0.1em] ${activeTab === 'results' ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-neutral-500 group-hover:text-slate-900 dark:group-hover:text-white'}`}>3. View Plan</span>
                   <span className="block max-h-0 opacity-0 overflow-hidden transition-all duration-300 group-hover:max-h-24 group-hover:opacity-100 group-hover:mt-2 text-[10px] tracking-normal normal-case font-medium text-slate-500 dark:text-neutral-400">
-                    Generate high-fidelity solar array sizing, battery capacity limits, and a complete Bill of Materials.
+                    See your recommended system size and equipment breakdown.
                   </span>
                 </div>
               </button>
@@ -212,13 +212,13 @@ export default function App() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 w-full overflow-y-auto print:overflow-visible overflow-x-hidden bg-slate-100 dark:bg-[#0a0a0a] transition-colors duration-300">
-          <div className="p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 w-full max-w-6xl mx-auto">
+        <main className="flex-1 w-full overflow-y-auto print:overflow-visible overflow-x-hidden bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-300">
+          <div className="p-6 md:p-10 lg:p-16 xl:p-20 w-full max-w-7xl mx-auto">
             {activeTab === 'load' && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="mb-10 border-b border-slate-200 dark:border-neutral-800 pb-8">
-                  <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-sans">Load Mapping Engine</h2>
-                  <p className="text-slate-500 mt-3 text-sm font-medium">Construct a precise room-by-room profile of electrical consumption.</p>
+                <div className="mb-12 pb-8">
+                  <h2 className="text-3xl md:text-4xl font-light text-slate-900 dark:text-white tracking-tight font-sans">Add your rooms and appliances to estimate your solar needs</h2>
+                  <p className="text-slate-400 mt-2 text-base font-normal">Start by adding a room, then include the devices you use daily.</p>
                 </div>
                 <LoadBuilder rooms={rooms} setRooms={setRooms} onNext={() => setActiveTab('config')} />
               </div>
@@ -226,19 +226,19 @@ export default function App() {
 
             {activeTab === 'config' && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="mb-10 border-b border-slate-200 dark:border-neutral-800 pb-8">
-                  <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-sans">System Parameterization</h2>
-                  <p className="text-slate-500 mt-3 text-sm font-medium">Configure architectural requirements including autonomy and discharge limits.</p>
+                <div className="mb-12 pb-8">
+                  <h2 className="text-3xl md:text-4xl font-light text-slate-900 dark:text-white tracking-tight font-sans">Review System Configuration</h2>
+                  <p className="text-slate-400 mt-2 text-base font-normal">Fine-tune your backup needs and limits before viewing your plan.</p>
                 </div>
                 <SystemConfig config={config} setConfig={setConfig} onCalculate={() => setActiveTab('results')} />
               </div>
             )}
 
             {activeTab === 'results' && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-12">
-                <div className="mb-10 border-b border-slate-200 dark:border-neutral-800 pb-8">
-                  <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-sans">Architectural Blueprint</h2>
-                  <p className="text-slate-500 mt-3 text-sm font-medium">High-fidelity schematic derived from load profiling.</p>
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-16">
+                <div className="mb-12 pb-8">
+                  <h2 className="text-3xl md:text-4xl font-light text-slate-900 dark:text-white tracking-tight font-sans">Your Solar Plan</h2>
+                  <p className="text-slate-400 mt-2 text-base font-normal">A complete breakdown of the equipment needed and the estimated cost.</p>
                 </div>
                 
                 <div className="space-y-12">
@@ -261,7 +261,10 @@ export default function App() {
                         className="w-full bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-neutral-800 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:focus:border-[#FFE600] transition-all"
                       />
                     </div>
-                    <button className="bg-[#FFE600] hover:bg-yellow-400 text-black px-6 py-3 h-[46px] text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.15em] transition-all w-full sm:w-auto rounded-xl shadow-lg shadow-[#FFE600]/20 flex justify-center items-center flex-shrink-0">
+                    <button 
+                      onClick={() => alert("Verification Email Sent!")}
+                      className="bg-[#FFE600] hover:bg-yellow-400 cursor-pointer text-black px-6 py-3 h-[46px] text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.15em] transition-all w-full sm:w-auto rounded-xl shadow-lg shadow-[#FFE600]/20 flex justify-center items-center flex-shrink-0"
+                    >
                       Request Review
                     </button>
                   </div>

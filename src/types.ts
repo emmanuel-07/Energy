@@ -30,9 +30,4 @@ export interface CalculationResults {
   requiredBatteryCapacityAh: number;
   requiredInverterSizeW: number;
   requiredPvArraySizeW: number;
-  // Costs in NGN
-  estimatedBatteryCostNGN: number;
-  estimatedInverterCostNGN: number;
-  estimatedPvCostNGN: number;
-  totalEstimatedCostNGN: number;
 }
